@@ -9,6 +9,8 @@ An SQS Client component
 
 (defn ->System []
   (component/system-map
+    :config (config/->conf
+              config-path)
     :client (component/using
               (c/make-sqs-client)
               [:config])
