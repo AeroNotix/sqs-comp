@@ -21,7 +21,12 @@ An SQS Client component
 
 Has a dependency on a component which has a field called:
 
-`conf` which has a key `incoming-queue`
+`conf` which has keys:
+
+* `incoming-queue`
+* `using-am?`
+  * `aws-id`
+  * `aws-secret`
 
 Such as:
 
@@ -29,7 +34,8 @@ Such as:
 (defrecord configuration [conf]
   component/Lifecycle
   (start [c]
-    (assoc conf :incoming-queue "some-string"))
+    (assoc conf :incoming-queue "some-string"
+                :using-iam true))
   (stop [c]
     ))
 ```
