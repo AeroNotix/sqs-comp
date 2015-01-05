@@ -19,6 +19,22 @@ An SQS Client component
              [:config :client])))
 ```
 
+Has a dependency on a component which has a field called:
+
+`conf` which has a key `incoming-queue`
+
+Such as:
+
+```clojure
+(defrecord configuration [conf]
+  component/Lifecycle
+  (start [c]
+    (assoc conf :incoming-queue "some-string"))
+  (stop [c]
+    ))
+```
+
+
 ## License
 
 Copyright © 2015 Aaron France
