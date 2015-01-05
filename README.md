@@ -2,6 +2,21 @@
 
 An SQS Client component
 
+```clojure
+(ns foo
+  (:require [sqs-comp.client :as c]
+            [foo.queue :as q]))
+
+(defn ->System []
+  (component/system-map
+    :client (component/using
+              (c/make-sqs-client)
+              [:config])
+    :queue (component/using
+             (q/make-queue-loop)
+             [:config :client])))
+```
+
 ## License
 
 Copyright © 2015 Aaron France
