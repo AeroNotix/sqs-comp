@@ -28,14 +28,20 @@ Has a dependency on a component which has a field called:
   * `aws-id`
   * `aws-secret`
 
+And optionally:
+
+* `region`
+
 Such as:
 
 ```clojure
 (defrecord configuration [conf]
   component/Lifecycle
   (start [c]
-    (assoc conf :incoming-queue "some-string"
-                :using-iam true))
+  (assoc conf
+    :incoming-queue "some-string"
+    :using-iam true
+    :region "us-east-1"))
   (stop [c]
     ))
 ```

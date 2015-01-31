@@ -6,10 +6,23 @@
             [crap.exceptions :refer [try+]])
   (:import [com.amazonaws.services.sqs.model QueueDoesNotExistException]
            [com.amazonaws AmazonServiceException]
+           [com.amazonaws.regions Region Regions]
            [java.net SocketException SocketTimeoutException]
            [javax.net.ssl SSLPeerUnverifiedException]
            [org.apache.http.conn HttpHostConnectException]))
 
+
+(def key->Region
+  {:ap-northeast-1 Regions/AP_NORTHEAST_1
+   :ap-southeast-1 Regions/AP_SOUTHEAST_1
+   :ap-southeast-2 Regions/AP_SOUTHEAST_2
+   :cn-north-1     Regions/CN_NORTH_1
+   :eu-west-1      Regions/EU_WEST_1
+   :govcloud       Regions/GovCloud
+   :sa-east-1      Regions/SA_EAST_1
+   :us-east-1      Regions/US_EAST_1
+   :us-west-1      Regions/US_WEST_1
+   :us-west-2      Regions/US_WEST_2})
 
 (defn every-suffixed [haystack needle]
   (some true?
@@ -53,6 +66,11 @@ SQSReader are created")
   (start [sqs-client]
     (log/info "Starting new SQSClient with configuration:" config)
     (let [conf (:conf config)
+          region (if-let [region (:region conf)]
+                   (if (string? region)
+                     ((keyword region) key->Region)
+                     (region key->Region))
+                   (:us-east-1 key->Region))
           client (if (:using-iam conf)
                    (sqs/create-client)
                    (sqs/create-client
@@ -62,6 +80,7 @@ SQSReader are created")
           incoming-queue (.create-queues sqs-client1)
           sqs-client2 (assoc sqs-client1
                         :incoming-queue incoming-queue)]
+      (.setRegion client (Region/getRegion region))
       (.wait-for-queues sqs-client2 [incoming-queue])
       sqs-client2))
 

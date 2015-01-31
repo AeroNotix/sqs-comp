@@ -1,4 +1,4 @@
-(defproject sqs-comp "0.0.2"
+(defproject sqs-comp "0.1.0"
   :description "An SQS Client component"
   :url "http://github.com/AeroNotix/sqs-comp"
   :license {:name "Eclipse Public License"
